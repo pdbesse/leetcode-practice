@@ -195,3 +195,25 @@ class Solution:
             if nums[i] != 0:
                 nums[i], nums[k] = nums[k], nums[i]
                 k += 1
+
+'''TWO SUM'''
+# Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+# You may assume that each input would have exactly one solution, and you may not use the same element twice.
+# You can return the answer in any order.
+# Solution must have a run time less than O(n**2)
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        #runtime - O(N)
+        #space - O(N)
+        #use a dictionary to store the number and its index
+        #if the target - num exists in the dictionary then we have found the pair
+        #otherwise add the number and its index to the dictionary
+        #if we never find the pair then return [-1, -1]
+        
+        numbers_dict = {}
+        for i in range(len(nums)):
+            if target - nums[i] in numbers_dict:
+                return [numbers_dict[target - nums[i]], i]
+            numbers_dict[nums[i]] = i
+        return [-1, -1]
