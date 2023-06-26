@@ -142,7 +142,7 @@ class Solution:
     #     if not head or not head.next:
     #         return head
 
-    #     reversed_head = Solution.reverseList(head.next)
+    #     reversed_head = Solution.reverseListRecursive(head.next)
     #     head.next.next = head
     #     head.next = None
 
