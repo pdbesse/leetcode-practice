@@ -41,6 +41,7 @@ from typing import List, Optional, ListNode
 :type node: ListNode
 :rtype: void Do not return anything, modify node in-place instead.
 """
+
 class Solution:
     def deleteNode(self, node):
         node.val = node.next.val
@@ -74,6 +75,7 @@ class Solution:
     #     def __init__(self, val=0, next=None):
     #         self.val = val
     #         self.next = next
+
 class Solution:
     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         # Create a dummy node to handle edge cases
@@ -175,6 +177,7 @@ class Solution:
     #     def __init__(self, val=0, next=None):
     #         self.val = val
     #         self.next = next
+
 class Solution:
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
         dummy = ListNode(-1)
@@ -193,3 +196,62 @@ class Solution:
         prev.next = list1 if list1 else list2
 
         return dummy.next
+
+'''PALINDROME LINKED LIST'''
+# Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
+
+# Example 1:
+#     Input: head = [1,2,2,1]
+#     Output: true
+
+# Example 2:
+#     Input: head = [1,2]
+#     Output: false
+
+# Constraints:
+#     The number of nodes in the list is in the range [1, 105].
+#     0 <= Node.val <= 9
+
+# Follow up: Could you do it in O(n) time and O(1) space?
+
+# Definition for singly-linked list.
+    # class ListNode:
+    #     def __init__(self, val=0, next=None):
+    #         self.val = val
+    #         self.next = next
+
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        # Edge cases
+        if head is None or head.next is None:
+            return True
+        
+        # Find the middle of the linked list
+        slow = fast = head
+        while fast.next and fast.next.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        # Step 2: Reverse the second half of the linked list
+        second_half = Solution.reverse(slow.next)
+        slow.next = None
+
+        # Step 3: Compare the first half with the reversed second half
+        first_half = head
+        while first_half and second_half:
+            if first_half.val != second_half.val:
+                return False
+            first_half = first_half.next
+            second_half = second_half.next
+
+        return True
+
+    def reverse(head):
+        prev = None
+        current = head
+        while current:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        return prev
