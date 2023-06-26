@@ -291,16 +291,19 @@ class Solution:
 
 class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
-        if head is None or head.next is None:
-            return False
-
+        # Set the slow and fast pointers to the head of the list
         slow = head
-        fast = head.next
+        fast = head
 
-        while slow != fast:
-            if fast is None or fast.next is None:
-                return False
-            slow = slow.next
-            fast = fast.next.next
+        # Move the pointers through the list until the end is reached
+        while fast and fast.next_node:
+            # Move the slow pointer one node at a time
+            slow = slow.next_node
+            # Move the fast pointer two nodes at a time
+            fast = fast.next_node.next_node
+            # If the fast pointer catches up to the slow pointer, there is a cycle in the list
+            if slow == fast:
+                return True
 
-        return True
+        # If the fast pointer reaches the end of the list, there is no cycle
+        return False
