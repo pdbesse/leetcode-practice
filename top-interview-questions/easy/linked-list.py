@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, ListNode
 
 '''DELETE NODE IN A LINKED LIST'''
 # There is a singly-linked list head and we want to delete a node node in it.
@@ -45,3 +45,55 @@ class Solution:
     def deleteNode(self, node):
         node.val = node.next.val
         node.next = node.next.next
+
+'''REMOVE NTH NODE FROM END OF LIST'''
+# Given the head of a linked list, remove the nth node from the end of the list and return its head.
+
+# Example 1:
+#     Input: head = [1,2,3,4,5], n = 2
+#     Output: [1,2,3,5]
+
+# Example 2:
+#     Input: head = [1], n = 1
+#     Output: []
+
+# Example 3:
+#     Input: head = [1,2], n = 1
+#     Output: [1]
+
+# Constraints:
+#     The number of nodes in the list is sz.
+#     1 <= sz <= 30
+#     0 <= Node.val <= 100
+#     1 <= n <= sz
+
+# Follow up: Could you do this in one pass?
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        # Create a dummy node to handle edge cases
+        dummy = ListNode(0)
+        dummy.next = head
+
+        # Initialize fast and slow pointers
+        fast = dummy
+        slow = dummy
+
+        # Move the fast pointer n steps ahead
+        for _ in range(n):
+            fast = fast.next
+        
+        # Move both pointers simultaneously
+        while fast.next:
+            fast = fast.next
+            slow = slow.next
+        
+        # Remove the nth node from the end
+        slow.next = slow.next.next
+
+        return dummy.next
