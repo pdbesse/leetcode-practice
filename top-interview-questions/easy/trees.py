@@ -78,8 +78,71 @@ class Solution:
         def isValidBSTHelper(root,min,max):
                 if root is None:
                     return 'there is no BST'
-                if root.val < min or root.val > max:
+                if root.val <= min or root.val >= max:
                     return False
                 leftIsValid = isValidBSTHelper(root.left, min, root.val)
                 return leftIsValid and isValidBSTHelper(root.right, root.val, max)
         return isValidBSTHelper(root, float('-inf'), float('inf'))
+    
+'''SYMMETRIC TREE'''
+# Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+
+# Example 1:
+#     Input: root = [1,2,2,3,4,4,3]
+#     Output: true
+
+# Example 2:
+#     Input: root = [1,2,2,null,3,null,3]
+#     Output: false
+
+# Constraints:
+#     The number of nodes in the tree is in the range [1, 1000].
+#     -100 <= Node.val <= 100
+
+# Follow up: Could you solve it both recursively and iteratively?
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+# RECURSIVE SOLUTION
+class Solution:
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+        if root is None:
+            return 'there is no tree'
+        def isSymmetricHelper(left: TreeNode, right: TreeNode) -> bool:
+            if left is None and right is None:
+                return True
+            if left is None or right is None or left.val != right.val:
+                return False
+            return isSymmetricHelper(left.left, right.right) and isSymmetricHelper(left.right, right.left)
+        return isSymmetricHelper(root.left, root.right)
+
+# ITERATIVE SOLUTION
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        if root is None:
+            return True
+        
+        queue = Queue()
+        queue.put(root.left)
+        queue.put(root.right)
+        
+        while not queue.empty():
+            left = queue.get()
+            right = queue.get()
+            
+            if left is None and right is None:
+                continue
+            if left is None or right is None or left.val != right.val:
+                return False
+            
+            queue.put(left.left)
+            queue.put(right.right)
+            queue.put(left.right)
+            queue.put(right.left)
+        
+        return True
