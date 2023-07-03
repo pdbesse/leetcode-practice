@@ -60,18 +60,52 @@ class Solution:
 
 class Solution:
     def countPrimes(self, n: int) -> int:
-        out = []
+        if n <= 2:
+            return 0
+        
         prime = [True for i in range(n+1)]
         p = 2
 
-        while p*p <= n:
-            if (prime[p] == True):
+        while p*p < n:
+            if prime[p]:
                 for i in range(p*p, n+1, p):
                     prime[i] = False
             p += 1
         
-        for p in range(2, n+1):
+        count = 0
+        for p in range(2, n):
             if prime[p]:
-                out.append[p]
+                count += 1
         
-        return out
+        return count
+
+'''POWER OF THREE'''
+# Given an integer n, return true if it is a power of three. Otherwise, return false.
+# An integer n is a power of three, if there exists an integer x such that n == 3x.
+
+# Example 1:
+    # Input: n = 27
+    # Output: true
+    # Explanation: 27 = 3^3
+
+# Example 2:
+    # Input: n = 0
+    # Output: false
+    # Explanation: There is no x where 3x = 0.
+
+# Example 3:
+    # Input: n = -1
+    # Output: false
+    # Explanation: There is no x where 3x = (-1).
+
+# Constraints:
+#     -231 <= n <= 231 - 1
+
+# Follow up: Could you solve it without loops/recursion?
+class Solution:
+    def isPowerOfThree(self, n: int) -> bool:
+        if n <= 0:
+            return False
+        while n % 3 == 0:
+            n //= 3
+        return n == 1
