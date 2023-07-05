@@ -317,3 +317,52 @@ class Solution:
                 return True
         
         return False
+    
+'''COUNT AND SAY'''
+# The count-and-say sequence is a sequence of digit strings defined by the recursive formula:
+    # countAndSay(1) = "1"
+    # countAndSay(n) is the way you would "say" the digit string from countAndSay(n-1), which is then converted into a different digit string.
+# To determine how you "say" a digit string, split it into the minimal number of substrings such that each substring contains exactly one unique digit. Then for each substring, say the number of digits, then say the digit. Finally, concatenate every said digit.
+# Given a positive integer n, return the nth term of the count-and-say sequence.
+
+# Example 1:
+    # Input: n = 1
+    # Output: "1"
+    # Explanation: This is the base case.
+
+# Example 2:
+    # Input: n = 4
+    # Output: "1211"
+    # Explanation:
+    # countAndSay(1) = "1"
+    # countAndSay(2) = say "1" = one 1 = "11"
+    # countAndSay(3) = say "11" = two 1's = "21"
+    # countAndSay(4) = say "21" = one 2 + one 1 = "12" + "11" = "1211"
+
+# Constraints:
+    # 1 <= n <= 30
+
+# Hints:
+    #     - Create a helper function that maps an integer to pairs of its digits and their frequencies. For example, if you call this function with "223314444411", then
+    #     it maps it to an array of pairs [[2,2], [3,2], [1,1], [4,5], [1, 2]].
+    #     - Create another helper function that takes the array of pairs and creates a new integer. For example, if you call this function with [[2,2], [3,2], [1,1], [4, 5], [1, 2]], it should create "22"+"23"+"11"+"54"+"21" = "2223115421".
+    #     - Now, with the two helper functions, you can start with "1" and call the two functions alternatively n-1 times. The answer is the last integer you will obtain.
+
+class Solution:
+    def countAndSay(self, n: int) -> str:
+        if n == 1:
+            return "1"
+
+        prev = self.countAndSay(n - 1)
+        result = ""
+        count = 1
+
+        for i in range(1, len(prev)):
+            if prev[i] == prev[i - 1]:
+                count += 1
+            else:
+                result += str(count) + prev[i - 1]
+                count = 1
+
+        result += str(count) + prev[-1]
+        return result
