@@ -43,7 +43,7 @@ class Solution:
             # Skip duplicates
             if i > 0 and nums[i] == nums[i-1]:
                 continue
-            
+
             left = i + 1
             right = n - 1
 
@@ -67,3 +67,110 @@ class Solution:
                         right -= 1
 
         return out
+
+'''SET MATRIX ZEROES'''
+# Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+# You must do it in place.
+
+# Example 1:
+# Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+# Output: [[1,0,1],[0,0,0],[1,0,1]]
+
+# Example 2:
+# Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+# Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+
+# Constraints:
+#     m == matrix.length
+#     n == matrix[0].length
+#     1 <= m, n <= 200
+#     -231 <= matrix[i][j] <= 231 - 1
+
+# Follow up:
+#     A straightforward solution using O(mn) space is probably a bad idea.
+#     A simple improvement uses O(m + n) space, but still not the best solution.
+#     Could you devise a constant space solution?
+# HINTS:
+# - If any cell of the matrix has a zero we can record its row and column number using additional memory. But if you don't want to use extra memory then you can manipulate the array instead. i.e. simulating exactly what the question says.
+# - Setting cell values to zero on the fly while iterating might lead to discrepancies. What if you use some other integer value as your marker? There is still a better approach for this problem with 0(1) space.
+# - We could have used 2 sets to keep a record of rows/columns which need to be set to zero. But for an O(1) space solution, you can use one of the rows and and one of the columns to keep track of this information.
+# - We can use the first cell of every row and column as a flag. This flag would determine whether a row or column has been set to zero.
+
+"""
+Do not return anything, modify matrix in-place instead.
+"""
+
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        m = len(matrix)
+        n = len(matrix[0])
+        
+        firstRow = False
+        firstCol = False
+        
+        # Step 1: Check if first row or first column needs to be set to zero
+        for i in range(m):
+            if matrix[i][0] == 0:
+                firstCol = True
+                break
+        
+        for j in range(n):
+            if matrix[0][j] == 0:
+                firstRow = True
+                break
+        
+        # Step 2: Mark rows and columns based on zeros
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+        
+        # Step 3: Set cells to zero based on markers
+        for i in range(1, m):
+            for j in range(1, n):
+                if matrix[i][0] == 0 or matrix[0][j] == 0:
+                    matrix[i][j] = 0
+        
+        # Step 4: Set first row and first column to zero if needed
+        if firstRow:
+            for j in range(n):
+                matrix[0][j] = 0
+        
+        if firstCol:
+            for i in range(m):
+                matrix[i][0] = 0
+
+'''GROUP ANAGRAMS'''
+# Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+# Example 1:
+#     Input: strs = ["eat","tea","tan","ate","nat","bat"]
+#     Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+# Example 2:
+#     Input: strs = [""]
+#     Output: [[""]]
+
+# Example 3:
+#     Input: strs = ["a"]
+#     Output: [["a"]]
+
+# Constraints:
+#     1 <= strs.length <= 104
+#     0 <= strs[i].length <= 100
+#     strs[i] consists of lowercase English letters.
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        anagram_groups = {}
+        
+        for word in strs:
+            sorted_word = ''.join(sorted(word))
+            if sorted_word in anagram_groups:
+                anagram_groups[sorted_word].append(word)
+            else:
+                anagram_groups[sorted_word] = [word]
+        
+        return list(anagram_groups.values())
