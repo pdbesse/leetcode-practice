@@ -1,5 +1,4 @@
 from typing import List, Optional
-from queue import Queue
 
 '''CLIMBING STAIRS'''
 # You are climbing a staircase. It takes n steps to reach the top.
