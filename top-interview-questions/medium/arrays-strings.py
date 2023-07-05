@@ -225,3 +225,56 @@ class Solution:
                 start += 1
 
         return max_length
+
+'''LONGEST PALINDROMIC SUBSTRING'''
+# Given a string s, return the longest palindromic substring in s.
+
+# Example 1:
+    # Input: s = "babad"
+    # Output: "bab"
+    # Explanation: "aba" is also a valid answer.
+
+# Example 2:
+    # Input: s = "cbbd"
+    # Output: "bb"
+
+# Constraints:
+#     1 <= s.length <= 1000
+#     s consist of only digits and English letters.
+
+# Hints:
+#     - How can we reuse a previously computed palindrome to compute a larger palindrome?
+#     Hide Hint #2  
+#     - If “aba” is a palindrome, is “xabax” a palindrome? Similarly is “xabay” a palindrome?
+#     Hide Hint #3  
+#     - Complexity based hint:
+#         - If we use brute-force and check whether for every start and end position a substring is a palindrome we have O(n^2) start - end pairs and O(n)  
+#           palindromic checks. Can we reduce the time for palindromic checks to O(1) by reusing some previous computation.
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if not s:
+            return ""
+
+        start = 0  # Starting index of the longest palindromic substring
+        end = 0  # Ending index of the longest palindromic substring
+
+        for i in range(len(s)):
+            len1 = self.expandAroundCenter(s, i, i)  # Check for odd-length palindromes
+            len2 = self.expandAroundCenter(s, i, i + 1)  # Check for even-length palindromes
+            max_len = max(len1, len2)
+
+            if max_len > end - start:
+                start = i - (max_len - 1) // 2
+                end = i + max_len // 2
+
+        return s[start:end + 1]
+
+    def expandAroundCenter(self, s: str, left: int, right: int) -> int:
+        # Expand around the center indices while the characters match
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+
+        # Return the length of the palindrome
+        return right - left - 1
