@@ -124,3 +124,40 @@ class Solution:
         backtrack()
 
         return out
+
+'''SUBSETS'''
+# Given an integer array nums of unique elements, return all possible subsets (the power set).
+# The solution set must not contain duplicate subsets. Return the solution in any order.
+
+# Example 1:
+#     Input: nums = [1,2,3]
+#     Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+
+# Example 2:
+#     Input: nums = [0]
+#     Output: [[],[0]]
+
+# Constraints:
+#     1 <= nums.length <= 10
+#     -10 <= nums[i] <= 10
+#     All the numbers of nums are unique.
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        def backtrack(start, path):
+            # Add current subset to output
+            out.append(path[:])
+
+            # Find all possible choices for next element
+            for i in range(start, n):
+                path.append(nums[i])
+                # Move to next element
+                backtrack(i + 1, path)
+                # Remove last element (backtrack)
+                path.pop()
+        
+        n = len(nums)
+        out = []
+        backtrack(0, [])
+
+        return out
