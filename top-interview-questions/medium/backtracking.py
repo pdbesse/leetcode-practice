@@ -47,3 +47,38 @@ class Solution:
         backtrack('', digits)
 
         return combinations
+
+'''GENERATE PARANTHESES'''
+# Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+# Example 1:
+    # Input: n = 3
+    # Output: ["((()))","(()())","(())()","()(())","()()()"]
+
+# Example 2:
+    # Input: n = 1
+    # Output: ["()"]
+
+# Constraints:
+    # 1 <= n <= 8   
+
+class Solution:
+    def generateParenthesis(self, n: int) -> List[str]:
+        lst = []
+        self.helper(n, n, '', lst)
+
+        return lst
+
+    def helper(self, left_count: int, right_count: int, current: str, lst: List[str]):
+        # Base case: If both left_count and right_count are zero, we have a valid combination
+        if left_count == 0 and right_count == 0:
+            lst.append(current)
+            return
+        
+        # Recursive cases
+        # If there are more left parentheses left, add one
+        if left_count > 0:
+            self.helper(left_count - 1, right_count, current + '(', lst)
+        # If there are more right parentheses left, add one
+        if right_count > left_count:
+            self.helper(left_count, right_count - 1, current + ')', lst)
