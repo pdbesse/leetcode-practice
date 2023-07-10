@@ -1,4 +1,5 @@
 from typing import List
+import heapq
 
 '''SORTING COLORS'''
 # Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
@@ -82,3 +83,33 @@ class Solution:
         
         # Return the first k elements of the sorted list
         return [sorted_freq[i][0] for i in range(k)]
+
+'''KTH LARGE ELEMENT IN AN ARRAY'''
+# Given an integer array nums and an integer k, return the kth largest element in the array.
+# Note that it is the kth largest element in the sorted order, not the kth distinct element.
+# Can you solve it without sorting?
+
+# Example 1:
+# Input: nums = [3,2,1,5,6,4], k = 2
+# Output: 5
+
+# Example 2:
+# Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+# Output: 4
+
+# Constraints:
+# 1 <= k <= nums.length <= 105
+# -104 <= nums[i] <= 104
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        pq = []
+        for i in range(k):
+            heapq.heappush(pq, nums[i])
+        
+        for num in nums[k:]:
+            if num > pq[0]:
+                heapq.heappop(pq)
+                heapq.heappush(pq, num)
+            
+        return pq[0]
