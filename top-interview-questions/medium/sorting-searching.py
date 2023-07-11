@@ -148,3 +148,93 @@ class Solution:
                 right = mid
         
         return left
+
+'''SEARCH FOR A RANGE'''
+# Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
+# If target is not found in the array, return [-1, -1].
+# You must write an algorithm with O(log n) runtime complexity.
+
+# Example 1:
+#     Input: nums = [5,7,7,8,8,10], target = 8
+#     Output: [3,4]
+
+# Example 2:
+#     Input: nums = [5,7,7,8,8,10], target = 6
+#     Output: [-1,-1]
+
+# Example 3:
+#     Input: nums = [], target = 0
+#     Output: [-1,-1]
+
+# Constraints:
+#     0 <= nums.length <= 105
+#     -109 <= nums[i] <= 109
+#     nums is a non-decreasing array.
+#     -109 <= target <= 109
+
+class Solution:
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+        start, end = -1, -1
+        left, right = 0, len(nums) - 1
+
+        # Find the first occurrence of the target value
+        while left <= right:
+            mid = (left + right) // 2
+            if nums[mid] == target:
+                start = mid
+                right = mid - 1
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        if start == -1:
+            return [-1, -1]
+
+        # Find the last occurrence of the target value
+        left, right = start, len(nums) - 1
+        while left <= right:
+            mid = (left + right) // 2
+            if nums[mid] == target:
+                end = mid
+                left = mid + 1
+            elif nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return [start, end]
+
+'''MERGE INTERVALS'''
+# Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+# Example 1:
+#     Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+#     Output: [[1,6],[8,10],[15,18]]
+#     Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+
+# Example 2:
+#     Input: intervals = [[1,4],[4,5]]
+#     Output: [[1,5]]
+#     Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+# Constraints:
+#     1 <= intervals.length <= 104
+#     intervals[i].length == 2
+#     0 <= starti <= endi <= 104
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        # Sort intervals by start time
+        intervals.sort(key=lambda x: x[0])
+        # Initialize result list
+        result = []
+        for interval in intervals:
+            # If result is empty or current interval doesn't overlap previous interval
+            if not result or interval[0] > result[-1][1]:
+                result.append(interval)
+            else:
+                # Update end time of previous interval
+                result[-1][1] = max(result[-1][1], interval[1])
+        
+        return result
