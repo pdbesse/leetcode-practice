@@ -62,7 +62,7 @@ class Solution:
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
         if not matrix:
-            return []
+            return result
         
         result = []
         row_start, row_end = 0, len(matrix) - 1
@@ -120,4 +120,22 @@ class Solution:
 
 class Solution:
     def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -> int:
-        pass
+        dict = {}
+        # Store sums of nums1 and nums2
+        for num1 in nums1:
+            for num2 in nums2:
+                sum = num1 + num2
+                if sum in dict:
+                    dict[sum] += 1
+                else:
+                    dict[sum] = 1
+        
+        # Iterate through nums3 and nums4 to find sums and count occurences
+        result = 0
+        for num3 in nums3:
+            for num4 in nums4:
+                target = -(num3 + num4)
+                if target in dict:
+                    result += dict[target]
+        
+        return result
