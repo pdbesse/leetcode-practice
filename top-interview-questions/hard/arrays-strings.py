@@ -36,3 +36,88 @@ class Solution:
             right_product *= nums[i]
         
         return answer
+    
+'''SPIRAL MATRIX'''
+# Given an m x n matrix, return all elements of the matrix in spiral order.
+
+# Example 1:
+#     Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+#     Output: [1,2,3,6,9,8,7,4,5]
+
+# Example 2:
+#     Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+#     Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+
+# Constraints:
+#     m == matrix.length
+#     n == matrix[i].length
+#     1 <= m, n <= 10
+#     -100 <= matrix[i][j] <= 100
+
+# Hints:
+#     - Well for some problems, the best way really is to come up with some algorithms for simulation. Basically, you need to simulate what the problem asks us to do.
+#     - We go boundary by boundary and move inwards. That is the essential operation. First row, last column, last row, first column, and then we move inwards by 1 and repeat. That's all. That is all the simulation that we need.
+#     - Think about when you want to switch the progress on one of the indexes. If you progress on i out of [i, j], you'll shift in the same column. Similarly, by changing values for j, you'd be shifting in the same row. Also, keep track of the end of a boundary so that you can move inwards and then keep repeating. It's always best to simulate edge cases like a single column or a single row to see if anything breaks or not.
+
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if not matrix:
+            return []
+        
+        result = []
+        row_start, row_end = 0, len(matrix) - 1
+        col_start, col_end = 0, len(matrix[0]) - 1
+        
+        while row_start <= row_end and col_start <= col_end:
+            # Traverse right
+            for j in range(col_start, col_end + 1):
+                result.append(matrix[row_start][j])
+            row_start += 1
+            
+            # Traverse down
+            for i in range(row_start, row_end + 1):
+                result.append(matrix[i][col_end])
+            col_end -= 1
+            
+            # Traverse left
+            if row_start <= row_end:
+                for j in range(col_end, col_start - 1, -1):
+                    result.append(matrix[row_end][j])
+                row_end -= 1
+            
+            # Traverse up
+            if col_start <= col_end:
+                for i in range(row_end, row_start - 1, -1):
+                    result.append(matrix[i][col_start])
+                col_start += 1
+        
+        return result
+
+'''4SUM II'''
+# Given four integer arrays nums1, nums2, nums3, and nums4 all of length n, return the number of tuples (i, j, k, l) such that:
+# 0 <= i, j, k, l < n
+# nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+
+# Example 1:
+#     Input: nums1 = [1,2], nums2 = [-2,-1], nums3 = [-1,2], nums4 = [0,2]
+#     Output: 2
+#     Explanation:
+#     The two tuples are:
+#     1. (0, 0, 0, 1) -> nums1[0] + nums2[0] + nums3[0] + nums4[1] = 1 + (-2) + (-1) + 2 = 0
+#     2. (1, 1, 0, 0) -> nums1[1] + nums2[1] + nums3[0] + nums4[0] = 2 + (-1) + (-1) + 0 = 0
+
+# Example 2:
+#     Input: nums1 = [0], nums2 = [0], nums3 = [0], nums4 = [0]
+#     Output: 1
+
+# Constraints:
+#     n == nums1.length
+#     n == nums2.length
+#     n == nums3.length
+#     n == nums4.length
+#     1 <= n <= 200
+#     -228 <= nums1[i], nums2[i], nums3[i], nums4[i] <= 228
+
+class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -> int:
+        pass
