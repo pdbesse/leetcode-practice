@@ -247,3 +247,48 @@ class Solution:
                     board[r][c] = 0
                 elif board[r][c] == 2:
                     board[r][c] = 1
+
+'''FIRST MISSING POSITIVE'''
+# Given an unsorted integer array nums, return the smallest missing positive integer.
+# You must implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.
+
+# Example 1:
+#     Input: nums = [1,2,0]
+#     Output: 3
+#     Explanation: The numbers in the range [1,2] are all in the array.
+
+# Example 2:
+#     Input: nums = [3,4,-1,1]
+#     Output: 2
+#     Explanation: 1 is in the array but 2 is missing.
+
+# Example 3:
+#     Input: nums = [7,8,9,11,12]
+#     Output: 1
+#     Explanation: The smallest positive integer 1 is missing.
+
+# Constraints:
+#     1 <= nums.length <= 105
+#     -231 <= nums[i] <= 231 - 1
+
+# Hints: 
+# - Think about how you would solve the problem in non-constant space. Can you apply that logic to the existing space?
+# - We don't care about duplicates or non-positive integers
+# - Remember that O(2n) = O(n)
+
+class Solution:
+    def firstMissingPositive(self, nums: List[int]) -> int:
+        n = len(nums)
+        
+        # Step 1: Remove non-positive integers and duplicates
+        for i in range(n):
+            while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:
+                nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
+        
+        # Step 2: Find the first index where nums[i] != i+1
+        for i in range(n):
+            if nums[i] != i + 1:
+                return i + 1
+        
+        # Step 3: All elements are in their correct positions, so the missing positive is n+1
+        return n + 1
