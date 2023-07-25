@@ -376,3 +376,84 @@ class Solution:
             fast = nums[fast]
         
         return slow
+    
+'''BASIC CALCULATOR II'''
+# Given a string s which represents an expression, evaluate this expression and return its value. 
+# The integer division should truncate toward zero.
+# You may assume that the given expression is always valid. All intermediate results will be in the range of [-231, 231 - 1].
+# Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
+
+
+# Example 1:
+#     Input: s = "3+2*2"
+#     Output: 7
+
+# Example 2:
+#     Input: s = " 3/2 "
+#     Output: 1
+
+# Example 3:
+#     Input: s = " 3+5 / 2 "
+#     Output: 5
+
+# Constraints:
+#     1 <= s.length <= 3 * 105
+#     s consists of integers and operators ('+', '-', '*', '/') separated by some number of spaces.
+#     s represents a valid expression.
+#     All the integers in the expression are non-negative integers in the range [0, 231 - 1].
+#     The answer is guaranteed to fit in a 32-bit integer.
+
+class Solution:
+    def calculate(self, s: str) -> int:
+        def perform_operation(num2, num1, operator):
+            if operator == '+':
+                return num1 + num2
+            elif operator == '-':
+                return num1 - num2
+            elif operator == '*':
+                return num1 * num2
+            elif operator == '/':
+                return num1 // num2  # Integer division, truncates toward zero
+
+        def precedence(op):
+            if op == '+' or op == '-':
+                return 1
+            elif op == '*' or op == '/':
+                return 2
+            return 0
+
+        # Remove all spaces from the input string
+        s = s.replace(" ", "")
+        
+        num_stack = []  # Stack to store operands (numbers)
+        op_stack = []   # Stack to store operators (+, -, *, /)
+
+        i = 0
+        while i < len(s):
+            if s[i].isdigit():  # If it's a digit, extract the entire number
+                j = i
+                while j < len(s) and s[j].isdigit():
+                    j += 1
+                num = int(s[i:j])
+                num_stack.append(num)
+                i = j
+            else:  # If it's an operator, process the operator based on precedence
+                while (len(op_stack) > 0 and 
+                       precedence(op_stack[-1]) >= precedence(s[i])):
+                    num2 = num_stack.pop()
+                    num1 = num_stack.pop()
+                    operator = op_stack.pop()
+                    result = perform_operation(num2, num1, operator)
+                    num_stack.append(result)
+                op_stack.append(s[i])
+                i += 1
+        
+        # Perform any remaining operations left in the stacks
+        while len(op_stack) > 0:
+            num2 = num_stack.pop()
+            num1 = num_stack.pop()
+            operator = op_stack.pop()
+            result = perform_operation(num2, num1, operator)
+            num_stack.append(result)
+        
+        return num_stack[0]
