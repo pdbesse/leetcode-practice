@@ -1,3 +1,4 @@
+from collections import deque
 from typing import List
 
 '''PRODUCT OF ARRAY EXCEPT SELF'''
@@ -457,3 +458,60 @@ class Solution:
             num_stack.append(result)
         
         return num_stack[0]
+
+'''SLIDING MAXIMUM WINDOW'''
+# You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+# Return the max sliding window.
+
+# Example 1:
+#     Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+#     Output: [3,3,5,5,6,7]
+#     Explanation: 
+#     Window position                Max
+#     ---------------               -----
+#     [1  3  -1] -3  5  3  6  7       3
+#     1 [3  -1  -3] 5  3  6  7       3
+#     1  3 [-1  -3  5] 3  6  7       5
+#     1  3  -1 [-3  5  3] 6  7       5
+#     1  3  -1  -3 [5  3  6] 7       6
+#     1  3  -1  -3  5 [3  6  7]      7
+
+# Example 2:
+#     Input: nums = [1], k = 1
+#     Output: [1]
+
+# Constraints:
+#     1 <= nums.length <= 105
+#     -104 <= nums[i] <= 104
+#     1 <= k <= nums.length
+# Hints:
+#     - How about using a data structure such as deque (double-ended queue)? 
+#     - The queue size need not be the same as the window’s size. 
+#     - Remove redundant elements and the queue should store only elements that need to be considered.
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        if not nums:
+            return []
+
+        result = []
+        window = deque()
+
+        for i in range(len(nums)):
+            # Remove elements from the front that are no longer part of the window
+            while window and window[0] < i - k + 1:
+                window.popleft()
+
+            # Remove elements from the back that are smaller than the current element
+            while window and nums[window[-1]] < nums[i]:
+                window.pop()
+
+            # Append the current element's index to the back of the deque
+            window.append(i)
+
+            # If the current index is greater than or equal to k - 1,
+            # add the maximum element to the result list
+            if i >= k - 1:
+                result.append(nums[window[0]])
+
+        return result
