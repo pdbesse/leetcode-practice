@@ -63,3 +63,70 @@ class Solution:
                 heapq.heappush(min_heap, (node.next.val, idx, node.next))
         
         return dummy.next
+    
+'''SORT LIST'''
+# Given the head of a linked list, return the list after sorting it in ascending order.
+
+# Example 1:
+#     Input: head = [4,2,1,3]
+#     Output: [1,2,3,4]
+
+# Example 2:
+#     Input: head = [-1,5,3,4,0]
+#     Output: [-1,0,3,4,5]
+
+# Example 3:
+#     Input: head = []
+#     Output: []
+
+# Constraints:
+#     The number of nodes in the list is in the range [0, 5 * 104].
+#     -105 <= Node.val <= 105
+
+# Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?
+
+class Solution:
+    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+        
+        # Helper function to find middle of linked list
+        def find_middle(node):
+            slow, fast = node, node
+            prev = None
+            while fast and fast.next:
+                prev = slow
+                slow = slow.next
+                fast = fast.next.next
+            prev.next = None
+            return slow
+        
+        # Helper function to merge two sorted linked lists
+        def merge(l1, l2):
+            dummy = ListNode()
+            current = dummy
+            
+            while l1 and l2:
+                if l1.val < l2.val:
+                    current.next = l1
+                    l1 = l1.next
+                else:
+                    current.next = l2
+                    l2 = l2.next
+                current = current.next
+            
+            current.next = l1 if l1 else l2
+            
+            return dummy.next
+        
+        # Recursive merge sort
+        def merge_sort(node):
+            if not node or not node.next:
+                return node
+            
+            mid = find_middle(node)
+            left = merge_sort(node)
+            right = merge_sort(mid)
+            return merge(left, right)
+        
+        return merge_sort(head)
