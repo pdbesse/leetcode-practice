@@ -63,3 +63,67 @@ class Solution:
                         visited.add(neighbor)
                         queue.append((neighbor, level + 1))
         return 0
+    
+'''SURROUNDED REGIONS'''
+# Given an m x n matrix board containing 'X' and 'O', capture all regions that are 4-directionally surrounded by 'X'.
+# A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+# Example 1:
+#     Input: board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+#     Output: [["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+#     Explanation: Notice that an 'O' should not be flipped if:
+#     - It is on the border, or
+#     - It is adjacent to an 'O' that should not be flipped.
+#     The bottom 'O' is on the border, so it is not flipped.
+#     The other three 'O' form a surrounded region, so they are flipped.
+
+# Example 2:
+#     Input: board = [["X"]]
+#     Output: [["X"]]
+
+# Constraints:
+#     m == board.length
+#     n == board[i].length
+#     1 <= m, n <= 200
+#     board[i][j] is 'X' or 'O'.
+
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        def dfs(row,col):
+            if row < 0 or row >= m or col < 0 or col >= n or board[row][col] != 'O':
+                return
+            
+            # Mark current cell as 'M' (to be modified to 'X' later)
+            board[row][col] = 'M'
+            # Recursively traverse all four directions
+            for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
+                dfs(row + dr, col + dc)
+
+        if not board:
+            return
+        
+        m, n = len(board), len(board[0])
+
+        # Traverse boundary and mark all '0's and their connected regions with 'M'
+        for row in range(m):
+            if board[row][0] == 'O':
+                dfs(row, 0)
+            if board[row][n-1] == 'O':
+                dfs(row, n - 1)
+        
+        for col in range(n):
+            if board[0][col] == 'O':
+                dfs(0, col)
+            if board[m - 1][col] == 'O':
+                dfs(m - 1, col)
+        
+        # Mark all remaining 'O's as 'X's and restore 'M's to 'O's
+        for row in range(m):
+            for col in range(n):
+                if board[row][col] == 'O':
+                    board[row][col] = 'X'
+                elif board[row][col] == 'M':
+                    board[row][col] = 'O'
