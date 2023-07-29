@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from collections import defaultdict, deque
 
 # Definition for a binary tree node.
@@ -176,3 +176,51 @@ class Solution:
         
         # If either node is found in sutree, return that node as LCA
         return left_lca if left_lca else right_lca
+    
+'''BINARY TREE MAXIMUM PATH SUM'''
+# A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
+# The path sum of a path is the sum of the node's values in the path.
+# Given the root of a binary tree, return the maximum path sum of any non-empty path.
+
+# Example 1:
+#     Input: root = [1,2,3]
+#     Output: 6
+#     Explanation: The optimal path is 2 -> 1 -> 3 with a path sum of 2 + 1 + 3 = 6.
+
+# Example 2:
+#     Input: root = [-10,9,20,null,null,15,7]
+#     Output: 42
+#     Explanation: The optimal path is 15 -> 20 -> 7 with a path sum of 15 + 20 + 7 = 42.
+
+# Constraints:
+#     The number of nodes in the tree is in the range [1, 3 * 104].
+#     -1000 <= Node.val <= 1000
+
+class Solution:
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        # Helper function to calculate max path sum for a node
+        def maxPathSumHelper(node):
+            if not node:
+                return 0
+            
+            # Calculate max path sum for left and right subtrees
+            left_max = maxPathSumHelper(node.left)
+            right_max = maxPathSumHelper(node.right)
+
+            # Calculate max path sum that includes current node
+            # and either extends to its left or right subtree or includes
+            # only the current node
+            max_path_sum_through_node = max(left_max + node.val, right_max + node.val, node.val)
+
+             # Calculate max path sum that passes through current node
+            max_path_sum_passing_node = max(max_path_sum_through_node, left_max + node.val + right_max)
+
+            # Update global maximum path sum if needed
+            self.max_sum = max(self.max_sum, max_path_sum_passing_node)
+
+            return max_path_sum_through_node
+
+        # Initialize the global maximum path sum
+        self.max_sum = float('-inf')  
+        maxPathSumHelper(root)
+        return self.max_sum
