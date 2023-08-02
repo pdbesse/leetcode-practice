@@ -9,6 +9,74 @@ class TreeNode(object):
         self.right = None
 
 
+'''FLATTEN 2D VECTOR'''
+# Design an iterator to flatten a 2D vector. It should support the next and hasNext operations.
+# Implement the Vector2D class:
+#     - Vector2D(int[][] vec) initializes the object with the 2D vector vec.
+#     - next() returns the next element from the 2D vector and moves the pointer one step forward. You may assume that all the calls to next are valid.
+#     - hasNext() returns true if there are still some elements in the vector, and false otherwise.
+
+# Example 1:
+# Input
+#     ["Vector2D", "next", "next", "next", "hasNext", "hasNext", "next", "hasNext"]
+#     [[[[1, 2], [3], [4]]], [], [], [], [], [], [], []]
+# Output
+#     [null, 1, 2, 3, true, true, 4, false]
+# Explanation
+#     Vector2D vector2D = new Vector2D([[1, 2], [3], [4]]);
+#     vector2D.next();    // return 1
+#     vector2D.next();    // return 2
+#     vector2D.next();    // return 3
+#     vector2D.hasNext(); // return True
+#     vector2D.hasNext(); // return True
+#     vector2D.next();    // return 4
+#     vector2D.hasNext(); // return False
+
+# Constraints:
+#     0 <= vec.length <= 200
+#     0 <= vec[i].length <= 500
+#     -500 <= vec[i][j] <= 500
+#     At most 105 calls will be made to next and hasNext.
+
+# Follow up: As an added challenge, try to code it using only iterators in C++ or iterators in Java.
+
+# Hints:
+#     - How many variables do you need to keep track?
+#     - Two variables is all you need. Try with x and y.
+#     - Beware of empty rows. It could be the first few rows.
+#     - To write correct code, think about the invariant to maintain. What is it?
+#     - The invariant is x and y must always point to a valid point in the 2d vector. Should you maintain your invariant ahead of time or right when you need it?
+#     - Not sure? Think about how you would implement hasNext(). Which is more complex?
+#     - Common logic in two different places should be refactored into a common method.
+
+# Your Vector2D object will be instantiated and called as such:
+    # obj = Vector2D(vec)
+    # param_1 = obj.next()
+    # param_2 = obj.hasNext()
+
+class Vector2D:
+    def __init__(self, vec: List[List[int]]):
+        self.x = 0
+        self.y = 0
+        self.vec = vec
+
+    def move_to_next(self):
+        while self.x < len(self.vec) and self.y >= len(self.vec[self.x]):
+            self.x += 1
+            self.y = 0
+
+    def next(self) -> int:
+        self.move_to_next()
+        if self.x < len(self.vec):
+            val = self.vec[self.x][self.y]
+            self.y += 1
+            return val
+        return None
+
+    def hasNext(self) -> bool:
+        self.move_to_next()
+        return self.x < len(self.vec)
+    
 '''SERIALIZE AND DESERIALIZE BINARY TREE'''
 # Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
 # Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
