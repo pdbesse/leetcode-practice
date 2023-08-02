@@ -134,7 +134,55 @@ class Solution:
                 count -= 1
         
         return candidate
-    
+
+'''FIND THE CELEBRITY'''
+# Suppose you are at a party with n people labeled from 0 to n - 1 and among them, there may exist one celebrity. The definition of a celebrity is that all the other n - 1 people know the celebrity, but the celebrity does not know any of them.
+# Now you want to find out who the celebrity is or verify that there is not one. You are only allowed to ask questions like: "Hi, A. Do you know B?" to get information about whether A knows B. You need to find out the celebrity (or verify there is not one) by asking as few questions as possible (in the asymptotic sense).
+# You are given a helper function bool knows(a, b) that tells you whether a knows b. Implement a function int findCelebrity(n). There will be exactly one celebrity if they are at the party.
+# Return the celebrity's label if there is a celebrity at the party. If there is no celebrity, return -1.
+
+# Example 1:
+#     Input: graph = [[1,1,0],[0,1,0],[1,1,1]]
+#     Output: 1
+#     Explanation: There are three persons labeled with 0, 1 and 2. graph[i][j] = 1 means person i knows person j, otherwise graph[i][j] = 0 means person i does not know person j. The celebrity is the person labeled as 1 because both 0 and 2 know him but 1 does not know anybody.
+
+# Example 2:
+#     Input: graph = [[1,0,1],[1,1,0],[0,1,1]]
+#     Output: -1
+#     Explanation: There is no celebrity.
+
+# Constraints:
+#     n == graph.length == graph[i].length
+#     2 <= n <= 100
+#     graph[i][j] is 0 or 1.
+#     graph[i][i] == 1
+
+# Follow up: If the maximum number of allowed calls to the API knows is 3 * n, could you find a solution without exceeding the maximum number of calls?
+
+# The knows API is already defined for you.
+# return a bool, whether a knows b
+def knows(a: int, b: int) -> bool:
+    pass
+class Solution:
+    def findCelebrity(self, n: int) -> int:
+        # Start with first person as candidate
+        candidate = 0
+
+        # Find potential celebrity candidate
+        for i in range(1, n):
+            if knows(candidate, i):
+                candidate = i
+
+        # Verify if candidate is celebrity
+        for i in range(n):
+            if i != candidate:
+                # If candidate knows someone or someone doesn't know candidate, return -1
+                if knows(candidate, i) or not knows(i, candidate):
+                    return -1
+        
+        # Return candidate if they satisfy celebrity condition
+        return candidate
+
 '''TASK SCHEDULER'''
 # Given a characters array tasks, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle.
 # However, there is a non-negative integer n that represents the cooldown period between two same tasks (the same letter in the array), that is that there must be at least n units of time between any two same tasks.
