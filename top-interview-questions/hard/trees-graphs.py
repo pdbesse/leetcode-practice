@@ -531,6 +531,21 @@ class Solution:
 #     1 <= nums.length <= 105
 #     -104 <= nums[i] <= 104
 
+'''ALTERNATE SOLUTION, LESS EFFICIENT'''
+# class Solution:
+    # def countSmaller(self, nums: List[int]) -> List[int]:
+    #     n = len(nums)
+    #     counts = [0] * n
+        
+    #     for i in range(n):
+    #         count = 0
+    #         for j in range(i+1, n):
+    #             if nums[j] < nums[i]:
+    #                 count += 1
+    #         counts[i] = count
+        
+    #     return counts
+
 class Solution:
     def countSmaller(self, nums: List[int]) -> List[int]:
         def merge_sort(arr):
@@ -570,5 +585,7 @@ class Solution:
         n = len(nums)
         counts = [0] * n
         indexed_nums = [(nums[i], i) for i in range(n)]
+
         merge_sort(indexed_nums)
+
         return counts
