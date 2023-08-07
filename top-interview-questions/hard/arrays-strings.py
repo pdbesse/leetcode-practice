@@ -394,9 +394,31 @@ class Solution:
 # Constraints:
 #     1 <= s.length <= 5 * 104
 #     0 <= k <= 50
+
 class Solution:
     def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
+        if k == 0 or len(s) == 0:
+            return 0
         
+        char_count = {}
+        left = 0
+        max_length = 0
+
+        for right in range(len(s)):
+            # Expand window by adding current character
+            char_count[s[right]] = char_count.get(s[right], 0) + 1
+
+            # If window contains more than k distinct chars, shrink window
+            while len(char_count) > k:
+                char_count[s[left]] -= 1
+                if char_count[s[left]] == 0:
+                    del char_count[s[left]]
+                left += 1
+
+            # Update max length encountered so far
+            max_length = max(max_length, right - left + 1)
+        
+        return max_length
 
 '''BASIC CALCULATOR II'''
 # Given a string s which represents an expression, evaluate this expression and return its value. 
