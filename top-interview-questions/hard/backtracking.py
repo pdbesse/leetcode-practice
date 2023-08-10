@@ -95,3 +95,71 @@ class Solution:
                     backtrack(root, r, c, board[r][c])
         
         return list(result)
+
+'''REMOVE INVALID PARENTHESIS'''
+# Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
+# Return a list of unique strings that are valid with the minimum number of removals. You may return the answer in any order.
+
+# Example 1:
+#     Input: s = "()())()"
+#     Output: ["(())()","()()()"]
+
+# Example 2:
+#     Input: s = "(a)())()"
+#     Output: ["(a())()","(a)()()"]
+
+# Example 3:
+#     Input: s = ")("
+#     Output: [""]
+
+# Constraints:
+#     1 <= s.length <= 25
+#     s consists of lowercase English letters and parentheses '(' and ')'.
+#     There will be at most 20 parentheses in s.
+
+# Hints:
+#     - Since we do not know which brackets can be removed, we try all the options! We can use recursion.
+#     - In the recursion, for each bracket, we can either use it or remove it.
+#     - Recursion will generate all the valid parentheses strings but we want the ones with the least number of parentheses deleted.
+#     - We can count the number of invalid brackets to be deleted and only generate the valid strings in the recusrion.
+
+class Solution:
+    def removeInvalidParentheses(self, s: str) -> List[str]:
+        def is_valid(string):
+            count = 0
+            for char in string:
+                if char == '(':
+                    count += 1
+                elif char == ')':
+                    count -= 1
+                    if count < 0:
+                        return False
+            return count == 0
+        
+        result = []
+        visited = set()
+        queue = [(s, 0)]
+        found = False
+        
+        while queue:
+            current, level = queue.pop(0)
+            
+            if is_valid(current):
+                result.append(current)
+                found = True
+            
+            if found:
+                # We've already found valid strings at this level,
+                # so we don't need to explore further
+                continue
+            
+            for i in range(level, len(current)):
+                if current[i] not in '()':
+                    continue
+                
+                next_string = current[:i] + current[i+1:]
+                if next_string not in visited:
+                    visited.add(next_string)
+                    queue.append((next_string, i))
+        
+        return result
