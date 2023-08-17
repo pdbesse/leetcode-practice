@@ -92,4 +92,52 @@ class Solution:
                 dp[i] += dp[i - 2]  # Add the number of ways from two positions back
 
         return dp[len(s)]  # The result is stored in the last position of the DP array
-        
+
+'''BEST TIME TO BUY AND SELL A STOCK WITH COOLDOWN'''
+# You are given an array prices where prices[i] is the price of a given stock on the ith day.
+# Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:
+#     After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).
+# Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+
+# Example 1:
+# Input: prices = [1,2,3,0,2]
+# Output: 3
+# Explanation: transactions = [buy, sell, cooldown, buy, sell]
+
+# Example 2:
+# Input: prices = [1]
+# Output: 0
+
+# Constraints:
+# 1 <= prices.length <= 5000
+# 0 <= prices[i] <= 1000
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+            n = len(prices)
+            
+            if n <= 1:
+                return 0
+            
+            # Initialize arrays to keep track of the maximum profit on each day
+            # where `buy[i]` represents the maximum profit if the last action is a buy on day `i`,
+            # and `sell[i]` represents the maximum profit if the last action is a sell on day `i`.
+            buy = [0] * n
+            sell = [0] * n
+            
+            # Base cases
+            buy[0] = -prices[0]  # Buying on the first day
+            sell[0] = 0
+            
+            for i in range(1, n):
+                # To get the maximum profit at day `i`, we can either:
+                # 1. Keep the profit from the previous day (no action on day `i`).
+                # 2. Buy on day `i`, which means we need to take the maximum of the profit from `buy[i-2]` minus the price on day `i` or `sell[i-1]` minus the price on day `i`.
+                buy[i] = max(buy[i-1], (sell[i-2] if i >= 2 else 0) - prices[i])
+                
+                # To get the maximum profit at day `i`, we can either:
+                # 1. Keep the profit from the previous day (no action on day `i`).
+                # 2. Sell on day `i`, which means we add the profit from the previous buy (`buy[i-1]`) to the price on day `i`.
+                sell[i] = max(sell[i-1], buy[i-1] + prices[i])
+            
+            return sell[n-1]  # The maximum profit on the last day (sell[n-1]) is the answer.
