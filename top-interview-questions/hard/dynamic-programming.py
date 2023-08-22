@@ -248,12 +248,13 @@ class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> List[str]:
         # Create set of valid words for faster lookup
         wordSet = set(wordDict)
+        n = len(s) + 1
 
         # DP array to store possible sentences for each index
-        dp = [[] for _ in range(len(s) + 1)]
+        dp = [[] for _ in range(n)]
         dp[0] = ['']
 
-        for end in range(1, len(s) + 1):
+        for end in range(1, n):
             for start in range(end):
                 word = s[start:end]
                 if word in wordSet:
@@ -264,3 +265,45 @@ class Solution:
                             dp[end].append(word)
         
         return dp[len(s)]
+
+'''BURST BALLONS'''
+# You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.
+# If you burst the ith balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.
+# Return the maximum coins you can collect by bursting the balloons wisely.
+
+# Example 1:
+    # Input: nums = [3,1,5,8]
+    # Output: 167
+    # Explanation:
+    # nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []
+    # coins =  3*1*5    +   3*5*8   +  1*3*8  + 1*8*1 = 167
+
+# Example 2:
+    # Input: nums = [1,5]
+    # Output: 10
+
+# Constraints:
+    # n == nums.length
+    # 1 <= n <= 300
+    # 0 <= nums[i] <= 100
+
+class Solution:
+    def maxCoins(self, nums: List[int]) -> int:
+        n = len(nums)
+        new_nums = [1] + nums + [1]
+        memo = {}
+
+        def dp(i, j):
+            if i > j:
+                return 0
+            if (i, j) in memo:
+                return memo[(i, j)]
+
+            max_coins = 0
+            for k in range(i, j + 1):
+                max_coins = max(max_coins, dp(i, k - 1) + dp(k + 1, j) + new_nums[i - 1] * new_nums[k] * new_nums[j + 1])
+
+            memo[(i, j)] = max_coins
+            return max_coins
+
+        return dp(1, n)
