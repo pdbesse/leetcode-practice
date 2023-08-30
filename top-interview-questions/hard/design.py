@@ -286,3 +286,88 @@ class MedianFinder:
             return (-self.max_heap[0] + self.min_heap[0]) / 2
         else:
             return -self.max_heap[0]
+        
+'''RANGE SUM QUERY 2D - MUTABLE'''
+# Given a 2D matrix matrix, handle multiple queries of the following types:
+#     - Update the value of a cell in matrix.
+#     - Calculate the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
+
+# Implement the NumMatrix class:
+#     - NumMatrix(int[][] matrix) Initializes the object with the integer matrix matrix.
+#     - void update(int row, int col, int val) Updates the value of matrix[row][col] to be val.
+#     - int sumRegion(int row1, int col1, int row2, int col2) Returns the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
+ 
+
+# Example 1:
+#     Input
+#         ["NumMatrix", "sumRegion", "update", "sumRegion"]
+#         [[[[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]], [2, 1, 4, 3], [3, 2, 2], [2, 1, 4, 3]]
+#     Output
+#         [null, 8, null, 10]
+#     Explanation
+#         NumMatrix numMatrix = new NumMatrix([[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]);
+#         numMatrix.sumRegion(2, 1, 4, 3); // return 8 (i.e. sum of the left red rectangle)
+#         numMatrix.update(3, 2, 2);       // matrix changes from left image to right image
+#         numMatrix.sumRegion(2, 1, 4, 3); // return 10 (i.e. sum of the right red rectangle)
+
+# Constraints:
+#     m == matrix.length
+#     n == matrix[i].length
+#     1 <= m, n <= 200
+#     -1000 <= matrix[i][j] <= 1000
+#     0 <= row < m
+#     0 <= col < n
+#     -1000 <= val <= 1000
+#     0 <= row1 <= row2 < m
+#     0 <= col1 <= col2 < n
+#     At most 5000 calls will be made to sumRegion and update.
+
+# Your NumMatrix object will be instantiated and called as such:
+# obj = NumMatrix(matrix)
+# obj.update(row,col,val)
+# param_2 = obj.sumRegion(row1,col1,row2,col2)
+
+class NumMatrix:
+    def __init__(self, matrix: List[List[int]]):
+        self.matrix = matrix
+        self.m = len(matrix)
+        self.n = len(matrix[0]) if self.m > 0 else 0
+        self.bit = [[0] * (self.n + 1) for _ in range(self.m + 1)]
+        for i in range(self.m):
+            for j in range(self.n):
+                self.updateBIT(i, j, matrix[i][j])
+
+    def update(self, row: int, col: int, val: int) -> None:
+        delta = val - self.matrix[row][col]
+        self.updateBIT(row, col, delta)
+        self.matrix[row][col] = val
+
+    def updateBIT(self, row: int, col: int, val: int) -> None:
+        row += 1
+        col += 1
+        while row <= self.m:
+            c = col
+            while c <= self.n:
+                self.bit[row][c] += val
+                c += c & -c
+            row += row & -row
+
+    def queryBIT(self, row: int, col: int) -> int:
+        row += 1
+        col += 1
+        result = 0
+        while row > 0:
+            c = col
+            while c > 0:
+                result += self.bit[row][c]
+                c -= c & -c
+            row -= row & -row
+        return result
+
+    def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -> int:
+        return (
+            self.queryBIT(row2, col2)
+            - self.queryBIT(row2, col1 - 1)
+            - self.queryBIT(row1 - 1, col2)
+            + self.queryBIT(row1 - 1, col1 - 1)
+        )
